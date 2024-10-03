@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "glue_soft_project/1.0.0": {
+        "runtime": {
+          "glue_soft_project.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "glue_soft_project/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
