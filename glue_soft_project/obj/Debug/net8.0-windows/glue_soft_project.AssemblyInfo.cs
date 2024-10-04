@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("glue_soft_project")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b120e3d02546f3956089d69cacc8c1c1d4f23932")]
 [assembly: System.Reflection.AssemblyProductAttribute("glue_soft_project")]
 [assembly: System.Reflection.AssemblyTitleAttribute("glue_soft_project")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

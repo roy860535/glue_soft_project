@@ -14,6 +14,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = glue_soft_project
-build_property.ProjectDir = F:\GitHub\glue_soft_project\glue_soft_project\
+build_property.ProjectDir = F:\GitHub\glue_soft_project\glue_soft_project\glue_soft_project\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 

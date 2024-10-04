@@ -28,17 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             label1 = new Label();
             HelloWorldBtn = new Button();
             CountToTenBtn = new Button();
             DisplayTimeBtn = new Button();
-            HelloWorldLable = new Label();
-            DisplayTimeLable = new Label();
-            CountToTenLable = new Label();
-            DisplayTimeTimer = new System.Windows.Forms.Timer(components);
-            CountToTenLable2 = new Label();
-            ResetCheck = new CheckBox();
+            HelloWorldLabel = new Label();
+            DisplayTimeLabel = new Label();
+            CountToTenLabel = new Label();
             ResetBtn = new Button();
             SuspendLayout();
             // 
@@ -86,74 +82,46 @@
             DisplayTimeBtn.UseVisualStyleBackColor = true;
             DisplayTimeBtn.Click += DisplayTimeBtn_Click;
             // 
-            // HelloWorldLable
+            // HelloWorldLabel
             // 
-            HelloWorldLable.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            HelloWorldLable.Font = new Font("Microsoft JhengHei UI", 15F);
-            HelloWorldLable.ImageAlign = ContentAlignment.MiddleLeft;
-            HelloWorldLable.Location = new Point(34, 160);
-            HelloWorldLable.Name = "HelloWorldLable";
-            HelloWorldLable.Size = new Size(166, 32);
-            HelloWorldLable.TabIndex = 4;
-            HelloWorldLable.Text = "label";
-            HelloWorldLable.TextAlign = ContentAlignment.MiddleCenter;
-            HelloWorldLable.Click += HelloWorldLable_Click;
+            HelloWorldLabel.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            HelloWorldLabel.Font = new Font("Microsoft JhengHei UI", 15F);
+            HelloWorldLabel.ImageAlign = ContentAlignment.MiddleLeft;
+            HelloWorldLabel.Location = new Point(34, 160);
+            HelloWorldLabel.Name = "HelloWorldLabel";
+            HelloWorldLabel.Size = new Size(166, 32);
+            HelloWorldLabel.TabIndex = 4;
+            HelloWorldLabel.Text = "label";
+            HelloWorldLabel.TextAlign = ContentAlignment.MiddleCenter;
+            HelloWorldLabel.Click += HelloWorldLabel_Click;
             // 
-            // DisplayTimeLable
+            // DisplayTimeLabel
             // 
-            DisplayTimeLable.AutoSize = true;
-            DisplayTimeLable.Font = new Font("Microsoft JhengHei UI", 15F);
-            DisplayTimeLable.Location = new Point(279, 160);
-            DisplayTimeLable.Name = "DisplayTimeLable";
-            DisplayTimeLable.Size = new Size(248, 32);
-            DisplayTimeLable.TabIndex = 5;
-            DisplayTimeLable.Text = "0000/00/00 00:00:00";
-            DisplayTimeLable.TextAlign = ContentAlignment.MiddleCenter;
-            DisplayTimeLable.Click += DisplayTimeLable_Click;
+            DisplayTimeLabel.AutoSize = true;
+            DisplayTimeLabel.Font = new Font("Microsoft JhengHei UI", 15F);
+            DisplayTimeLabel.Location = new Point(279, 160);
+            DisplayTimeLabel.Name = "DisplayTimeLabel";
+            DisplayTimeLabel.Size = new Size(248, 32);
+            DisplayTimeLabel.TabIndex = 5;
+            DisplayTimeLabel.Text = "0000/00/00 00:00:00";
+            DisplayTimeLabel.TextAlign = ContentAlignment.MiddleCenter;
+            DisplayTimeLabel.Click += DisplayTimeLabel_Click;
             // 
-            // CountToTenLable
+            // CountToTenLabel
             // 
-            CountToTenLable.Font = new Font("Microsoft JhengHei UI", 15F);
-            CountToTenLable.Location = new Point(617, 160);
-            CountToTenLable.Name = "CountToTenLable";
-            CountToTenLable.Size = new Size(146, 32);
-            CountToTenLable.TabIndex = 6;
-            CountToTenLable.Text = "0";
-            CountToTenLable.TextAlign = ContentAlignment.MiddleCenter;
-            CountToTenLable.Click += CountToTenLable_Click;
-            // 
-            // DisplayTimeTimer
-            // 
-            DisplayTimeTimer.Interval = 1000;
-            DisplayTimeTimer.Tick += DisplayTimeTimer_Tick;
-            // 
-            // CountToTenLable2
-            // 
-            CountToTenLable2.Font = new Font("Microsoft JhengHei UI", 15F);
-            CountToTenLable2.Location = new Point(617, 201);
-            CountToTenLable2.Name = "CountToTenLable2";
-            CountToTenLable2.Size = new Size(146, 32);
-            CountToTenLable2.TabIndex = 7;
-            CountToTenLable2.Text = "0";
-            CountToTenLable2.TextAlign = ContentAlignment.MiddleCenter;
-            CountToTenLable2.Click += CountToTenLable2_Click;
-            // 
-            // ResetCheck
-            // 
-            ResetCheck.AutoSize = true;
-            ResetCheck.Font = new Font("Microsoft Sans Serif", 15F);
-            ResetCheck.Location = new Point(324, 29);
-            ResetCheck.Name = "ResetCheck";
-            ResetCheck.Size = new Size(101, 33);
-            ResetCheck.TabIndex = 8;
-            ResetCheck.Text = "Reset";
-            ResetCheck.UseVisualStyleBackColor = true;
-            ResetCheck.CheckedChanged += ResetCheck_CheckedChanged;
+            CountToTenLabel.Font = new Font("Microsoft JhengHei UI", 15F);
+            CountToTenLabel.Location = new Point(617, 160);
+            CountToTenLabel.Name = "CountToTenLabel";
+            CountToTenLabel.Size = new Size(146, 32);
+            CountToTenLabel.TabIndex = 7;
+            CountToTenLabel.Text = "0";
+            CountToTenLabel.TextAlign = ContentAlignment.MiddleCenter;
+            CountToTenLabel.Click += CountToTenLabel_Click;
             // 
             // ResetBtn
             // 
             ResetBtn.Font = new Font("Microsoft JhengHei UI", 15F);
-            ResetBtn.Location = new Point(422, 27);
+            ResetBtn.Location = new Point(348, 27);
             ResetBtn.Name = "ResetBtn";
             ResetBtn.Size = new Size(93, 34);
             ResetBtn.TabIndex = 9;
@@ -167,11 +135,9 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(ResetBtn);
-            Controls.Add(ResetCheck);
-            Controls.Add(CountToTenLable2);
-            Controls.Add(CountToTenLable);
-            Controls.Add(DisplayTimeLable);
-            Controls.Add(HelloWorldLable);
+            Controls.Add(CountToTenLabel);
+            Controls.Add(DisplayTimeLabel);
+            Controls.Add(HelloWorldLabel);
             Controls.Add(DisplayTimeBtn);
             Controls.Add(CountToTenBtn);
             Controls.Add(HelloWorldBtn);
@@ -188,12 +154,9 @@
         private Button HelloWorldBtn;
         private Button CountToTenBtn;
         private Button DisplayTimeBtn;
-        private Label HelloWorldLable;
-        private Label DisplayTimeLable;
-        private Label CountToTenLable;
-        private System.Windows.Forms.Timer DisplayTimeTimer;
-        private Label CountToTenLable2;
-        private CheckBox ResetCheck;
+        private Label HelloWorldLabel;
+        private Label DisplayTimeLabel;
+        private Label CountToTenLabel;
         private Button ResetBtn;
     }
 }
