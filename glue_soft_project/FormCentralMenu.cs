@@ -9,16 +9,16 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Label = System.Windows.Forms.Label;
-using Timer = System.Windows.Forms.Timer;
 
 namespace glue_soft_project
 {
     public partial class FormCentralMenu : Form
     {
         private Task? _CurrentCountToTenTask;
-        private CancellationTokenSource? _cts = null;
-        public int CountToTenValue = 0;
-        public bool CountToTenEnabled = false;
+        private CancellationTokenSource? _DisplayTimects = null;
+        private CancellationTokenSource? _countToTenCts = null;
+        public int CountToTenValue = 0; 
+
 
         public FormCentralMenu()
         {
@@ -27,16 +27,16 @@ namespace glue_soft_project
 
         private void HelloWorldBtn_Click(object sender, EventArgs e)
         {
-            HelloWorldLabel.Text = "Hello World!";
+            UpdateLabel(HelloWorldLabel, "Hello World!");
         }
 
         private void CountToTenBtn_Click(object sender, EventArgs e)
         {
-            CountToTenValue = 0;
+            ResetCountToTen();
 
             if (_CurrentCountToTenTask != null && !_CurrentCountToTenTask.IsCompleted)
             {
-                CountToTenEnabled = false;
+                _countToTenCts?.Cancel();
             }
 
             CountToTenTask();
@@ -44,16 +44,14 @@ namespace glue_soft_project
 
         private void DisplayTimeBtn_Click(object sender, EventArgs e)
         {
-            if(_cts == null)
+            if (_DisplayTimects == null)
             {
-                _cts = new CancellationTokenSource();
-                UpdatedisplayTime(DisplayTimeLabel, _cts.Token);
+                _DisplayTimects = new CancellationTokenSource();
+                UpdateDisplayTime(DisplayTimeLabel, _DisplayTimects.Token);
             }
-            else{
-                _cts?.Cancel();
-                _cts = null;
+            else {
+                CancelDisplayTime();
             }
-
         }
 
         private void ResetBtn_Click(object sender, EventArgs e)
@@ -62,45 +60,58 @@ namespace glue_soft_project
 
             if (result == DialogResult.Yes)
             {
-                _cts?.Cancel();
-                _cts = null;
-                CountToTenValue = 0;
-                CountToTenEnabled = false;
-                CountToTenLabel.Text = CountToTenValue.ToString();
-                HelloWorldLabel.Text = "None";
-                DisplayTimeLabel.Text = "yyyy/MM/dd HH:mm:ss";
+                CancelDisplayTime();
+                ResetCountToTen();
+                UpdateLabel(HelloWorldLabel, "None");
+                UpdateLabel(DisplayTimeLabel, "yyyy/MM/dd HH:mm:ss");
             }
 
         }
 
         //Function
-        public async void CountToTenTask()
+
+        private void UpdateLabel(Label label, string text)
+        {
+            this.Invoke((Action)(() =>
+            {
+                label.Text = text;
+            }));
+        }
+
+        //Count_To_Ten類別
+        private async void CountToTenTask()
         {
             if (_CurrentCountToTenTask == null || _CurrentCountToTenTask.IsCompleted)
             {
-                _CurrentCountToTenTask = UpdateCountToTen(CountToTenLabel);
+                _countToTenCts = new CancellationTokenSource();
+                _CurrentCountToTenTask = UpdateCountToTen(CountToTenLabel, _countToTenCts);
                 await _CurrentCountToTenTask;
             }
             else
             {
-                CountToTenValue = 0;
-                CountToTenLabel.Text = CountToTenValue.ToString();
                 MessageBox.Show("任務已取消");
             }
         }
 
-        public async Task UpdateCountToTen(Label label)
+        private async Task UpdateCountToTen(Label label, CancellationTokenSource token)
         {
-            CountToTenEnabled = true;
-            while (CountToTenValue<=10&&CountToTenEnabled)
+            while (CountToTenValue <= 10 && !token.IsCancellationRequested)
             {
-                label.Text = CountToTenValue.ToString();
+                UpdateLabel(label, CountToTenValue.ToString());
                 await Task.Delay(1000);
                 CountToTenValue++;
             }
         }
 
-        public void UpdatedisplayTime(Label label,CancellationToken token)
+        private void ResetCountToTen()
+        {
+            CountToTenValue = 0;
+            _countToTenCts?.Cancel();
+            UpdateLabel(CountToTenLabel, CountToTenValue.ToString());
+        }
+
+        //Display_Time類別
+        private void UpdateDisplayTime(Label label,CancellationToken token)
         {
             Task.Run(async () =>
             {
@@ -108,7 +119,7 @@ namespace glue_soft_project
                 {
                     this.Invoke((Action)(() =>
                     {
-                        label.Text = DateTime.Now.ToString(@"yyyy/MM/dd HH:mm:ss");
+                        UpdateLabel(label, DateTime.Now.ToString(@"yyyy/MM/dd HH:mm:ss"));
                     }));
                     DateTime now = DateTime.Now;
                     int msUntilNextSecond = 1000 - now.Millisecond;
@@ -117,8 +128,11 @@ namespace glue_soft_project
             });
         }
 
-
-
+        private void CancelDisplayTime()
+        {
+            _DisplayTimects?.Cancel();
+            _DisplayTimects = null;
+        }
 
         #region NotUsed
 
