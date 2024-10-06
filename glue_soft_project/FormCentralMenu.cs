@@ -14,15 +14,15 @@ namespace glue_soft_project
 {
     public partial class FormCentralMenu : Form
     {
-        private Task? _CurrentCountToTenTask;
+        
         private CancellationTokenSource? _DisplayTimects = null;
-        private CancellationTokenSource? _countToTenCts = null;
-        public int CountToTenValue = 0; 
+        private Counter _counter;
 
 
         public FormCentralMenu()
         {
             InitializeComponent();
+            _counter = new Counter(CountToTenLabel);
         }
 
         private void HelloWorldBtn_Click(object sender, EventArgs e)
@@ -32,14 +32,9 @@ namespace glue_soft_project
 
         private void CountToTenBtn_Click(object sender, EventArgs e)
         {
-            ResetCountToTen();
+            _counter.ResetCountToTen();
 
-            if (_CurrentCountToTenTask != null && !_CurrentCountToTenTask.IsCompleted)
-            {
-                _countToTenCts?.Cancel();
-            }
-
-            CountToTenTask();
+            _counter.CountToTenTask();
         }
 
         private void DisplayTimeBtn_Click(object sender, EventArgs e)
@@ -61,7 +56,7 @@ namespace glue_soft_project
             if (result == DialogResult.Yes)
             {
                 CancelDisplayTime();
-                ResetCountToTen();
+                _counter.ResetCountToTen();
                 UpdateLabel(HelloWorldLabel, "None");
                 UpdateLabel(DisplayTimeLabel, "yyyy/MM/dd HH:mm:ss");
             }
@@ -76,38 +71,6 @@ namespace glue_soft_project
             {
                 label.Text = text;
             }));
-        }
-
-        //Count_To_Ten類別
-        private async void CountToTenTask()
-        {
-            if (_CurrentCountToTenTask == null || _CurrentCountToTenTask.IsCompleted)
-            {
-                _countToTenCts = new CancellationTokenSource();
-                _CurrentCountToTenTask = UpdateCountToTen(CountToTenLabel, _countToTenCts);
-                await _CurrentCountToTenTask;
-            }
-            else
-            {
-                MessageBox.Show("任務已取消");
-            }
-        }
-
-        private async Task UpdateCountToTen(Label label, CancellationTokenSource token)
-        {
-            while (CountToTenValue <= 10 && !token.IsCancellationRequested)
-            {
-                UpdateLabel(label, CountToTenValue.ToString());
-                await Task.Delay(1000);
-                CountToTenValue++;
-            }
-        }
-
-        private void ResetCountToTen()
-        {
-            CountToTenValue = 0;
-            _countToTenCts?.Cancel();
-            UpdateLabel(CountToTenLabel, CountToTenValue.ToString());
         }
 
         //Display_Time類別
