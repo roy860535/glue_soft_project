@@ -6,24 +6,36 @@ using System.Threading.Tasks;
 
 namespace glue_soft_project
 {
+    
+
     public class Counter
     {
         private CancellationTokenSource? _countToTenCts = null;
         public int CountToTenValue = 0;
         private Task? _CurrentCountToTenTask;
-        private Label _label;
+        public List<IValueObserver<int>> _observer = new List<IValueObserver<int>>();
 
-        public Counter(Label label)
+        //觀察者模式的主體
+        public void Addserver(IValueObserver<int> observer)
         {
-            _label = label;
+            _observer.Add(observer);
         }
 
+        private void NotifyObserver(int value)
+        {
+            foreach(var observer in _observer)
+            {
+                observer.OnValueChanged(value);
+            }
+        }
+
+        //Count實際方法
         public async void CountToTenTask()
         {
             if (_CurrentCountToTenTask == null || _CurrentCountToTenTask.IsCompleted)
             {
                 _countToTenCts = new CancellationTokenSource();
-                _CurrentCountToTenTask = UpdateCountToTen(_label, _countToTenCts);
+                _CurrentCountToTenTask = UpdateCountToTen(_countToTenCts);
                 await _CurrentCountToTenTask;
             }
             else
@@ -32,11 +44,11 @@ namespace glue_soft_project
             }
         }
 
-        private async Task UpdateCountToTen(Label label, CancellationTokenSource token)
+        private async Task UpdateCountToTen(CancellationTokenSource token)
         {
             while (CountToTenValue <= 10 && !token.IsCancellationRequested)
             {
-                UpdateLabel(label, CountToTenValue.ToString());
+                NotifyObserver(CountToTenValue);
                 await Task.Delay(1000);
                 CountToTenValue++;
             }
@@ -47,16 +59,8 @@ namespace glue_soft_project
             CountToTenValue = 0;
             _countToTenCts?.Cancel();
             _countToTenCts = null;
-            UpdateLabel(_label, CountToTenValue.ToString());
+            NotifyObserver(CountToTenValue);
         }
 
-        private void UpdateLabel(Label label, string text)
-        {
-            string displayText = text ?? CountToTenValue.ToString();
-            _label.Invoke((Action)(() =>
-            {
-                _label.Text = displayText;
-            }));
-        }
     }
 }

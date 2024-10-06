@@ -12,41 +12,32 @@ using Label = System.Windows.Forms.Label;
 
 namespace glue_soft_project
 {
-    public partial class FormCentralMenu : Form
+    public partial class FormCentralMenu : Form, IValueObserver<int>,IValueObserver<string>
     {
-        
-        private CancellationTokenSource? _DisplayTimects = null;
-        private Counter _counter;
-
+        private Counter _counter = new Counter();
+        private DisplayTime _displayTime = new DisplayTime();
 
         public FormCentralMenu()
         {
             InitializeComponent();
-            _counter = new Counter(CountToTenLabel);
+            _counter.Addserver(this);
+            _displayTime.AddObserver(this);
         }
 
         private void HelloWorldBtn_Click(object sender, EventArgs e)
         {
             UpdateLabel(HelloWorldLabel, "Hello World!");
         }
-
+        
         private void CountToTenBtn_Click(object sender, EventArgs e)
         {
             _counter.ResetCountToTen();
-
             _counter.CountToTenTask();
         }
 
         private void DisplayTimeBtn_Click(object sender, EventArgs e)
         {
-            if (_DisplayTimects == null)
-            {
-                _DisplayTimects = new CancellationTokenSource();
-                UpdateDisplayTime(DisplayTimeLabel, _DisplayTimects.Token);
-            }
-            else {
-                CancelDisplayTime();
-            }
+            _displayTime.DisplayTimeTask();
         }
 
         private void ResetBtn_Click(object sender, EventArgs e)
@@ -55,16 +46,16 @@ namespace glue_soft_project
 
             if (result == DialogResult.Yes)
             {
-                CancelDisplayTime();
+                _displayTime.CancelDisplayTime();
+                _displayTime.ResetDisplayTime();
                 _counter.ResetCountToTen();
                 UpdateLabel(HelloWorldLabel, "None");
-                UpdateLabel(DisplayTimeLabel, "yyyy/MM/dd HH:mm:ss");
             }
 
         }
 
-        //Function
 
+        //Function
         private void UpdateLabel(Label label, string text)
         {
             this.Invoke((Action)(() =>
@@ -73,29 +64,18 @@ namespace glue_soft_project
             }));
         }
 
-        //Display_Time類別
-        private void UpdateDisplayTime(Label label,CancellationToken token)
+        //觀察者實現
+        public void OnValueChanged(int value)
         {
-            Task.Run(async () =>
-            {
-                while (!token.IsCancellationRequested)
-                {
-                    this.Invoke((Action)(() =>
-                    {
-                        UpdateLabel(label, DateTime.Now.ToString(@"yyyy/MM/dd HH:mm:ss"));
-                    }));
-                    DateTime now = DateTime.Now;
-                    int msUntilNextSecond = 1000 - now.Millisecond;
-                    await Task.Delay(msUntilNextSecond, token);
-                }
-            });
+            string text = value.ToString();
+            UpdateLabel(CountToTenLabel, text);
         }
 
-        private void CancelDisplayTime()
+        public void OnValueChanged(string time)
         {
-            _DisplayTimects?.Cancel();
-            _DisplayTimects = null;
+            UpdateLabel(DisplayTimeLabel, time);
         }
+
 
         #region NotUsed
 
