@@ -13,25 +13,12 @@ namespace glue_soft_project
         private CancellationTokenSource? _countToTenCts = null;
         public int CountToTenValue = 0;
         private Task? _CurrentCountToTenTask;
-        public List<IValueObserver<int>> _observer = new List<IValueObserver<int>>();
-
-        //觀察者模式的主體
-        public void Addserver(IValueObserver<int> observer)
-        {
-            _observer.Add(observer);
-        }
-
-        private void NotifyObserver(int value)
-        {
-            foreach(var observer in _observer)
-            {
-                observer.OnValueChanged(value);
-            }
-        }
+        public event Action<int>? CountUpdated;
 
         //Count實際方法
         public async void CountToTenTask()
         {
+
             if (_CurrentCountToTenTask == null || _CurrentCountToTenTask.IsCompleted)
             {
                 _countToTenCts = new CancellationTokenSource();
@@ -40,7 +27,8 @@ namespace glue_soft_project
             }
             else
             {
-                MessageBox.Show("任務已取消");
+                ResetCountToTen();
+                MessageBox.Show("計數任務已經重置");
             }
         }
 
@@ -48,18 +36,20 @@ namespace glue_soft_project
         {
             while (CountToTenValue <= 10 && !token.IsCancellationRequested)
             {
-                NotifyObserver(CountToTenValue);
+                CountUpdated?.Invoke(CountToTenValue);
                 await Task.Delay(1000);
                 CountToTenValue++;
             }
+            ResetCountToTen();
         }
 
         public void ResetCountToTen()
         {
-            CountToTenValue = 0;
             _countToTenCts?.Cancel();
             _countToTenCts = null;
-            NotifyObserver(CountToTenValue);
+            _CurrentCountToTenTask = null;
+            CountToTenValue = 0;
+            CountUpdated?.Invoke(CountToTenValue);
         }
 
     }

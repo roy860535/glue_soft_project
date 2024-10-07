@@ -8,22 +8,9 @@ namespace glue_soft_project
 {
     public class DisplayTime
     {
-        private List<IValueObserver<string>> _Observers = new List<IValueObserver<string>>();
+        public event Action<string>? TimeUpdated;
         public CancellationTokenSource? _DisplayTimects = null;
 
-        //觀察者主體
-        public void AddObserver(IValueObserver<string> observer)
-        {
-            _Observers.Add(observer);
-        }
-
-        public void NotifyObservers(string time)
-        {
-            foreach(var observer in _Observers)
-            {
-                observer.OnValueChanged(time);
-            }
-        }
 
         //DisplayTime方法
         public void DisplayTimeTask()
@@ -46,7 +33,7 @@ namespace glue_soft_project
                 while (!token.IsCancellationRequested)
                 {
                     string currentTime = DateTime.Now.ToString(@"yyyy/MM/dd HH:mm:ss");
-                    NotifyObservers(currentTime);
+                    TimeUpdated?.Invoke(currentTime);
                     DateTime now = DateTime.Now;
                     int msUntilNextSecond = 1000 - now.Millisecond;
                     await Task.Delay(msUntilNextSecond, token);
@@ -63,7 +50,7 @@ namespace glue_soft_project
         public void ResetDisplayTime()
         {
             string currentTime = @"yyyy/MM/dd HH:mm:ss";
-            NotifyObservers(currentTime);
+            TimeUpdated?.Invoke(currentTime);
         }
     }
 }

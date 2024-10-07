@@ -12,7 +12,7 @@ using Label = System.Windows.Forms.Label;
 
 namespace glue_soft_project
 {
-    public partial class FormCentralMenu : Form, IValueObserver<int>,IValueObserver<string>
+    public partial class FormCentralMenu : Form
     {
         private Counter _counter = new Counter();
         private DisplayTime _displayTime = new DisplayTime();
@@ -20,8 +20,8 @@ namespace glue_soft_project
         public FormCentralMenu()
         {
             InitializeComponent();
-            _counter.Addserver(this);
-            _displayTime.AddObserver(this);
+            _counter.CountUpdated += OnCounterUpdated;
+            _displayTime.TimeUpdated += OnDisplayTimeUpdated;
         }
 
         private void HelloWorldBtn_Click(object sender, EventArgs e)
@@ -31,7 +31,6 @@ namespace glue_soft_project
         
         private void CountToTenBtn_Click(object sender, EventArgs e)
         {
-            _counter.ResetCountToTen();
             _counter.CountToTenTask();
         }
 
@@ -46,14 +45,13 @@ namespace glue_soft_project
 
             if (result == DialogResult.Yes)
             {
+                _counter.ResetCountToTen();
                 _displayTime.CancelDisplayTime();
                 _displayTime.ResetDisplayTime();
-                _counter.ResetCountToTen();
                 UpdateLabel(HelloWorldLabel, "None");
             }
 
         }
-
 
         //Function
         private void UpdateLabel(Label label, string text)
@@ -65,13 +63,13 @@ namespace glue_soft_project
         }
 
         //觀察者實現
-        public void OnValueChanged(int value)
+        public void OnCounterUpdated(int value)
         {
             string text = value.ToString();
             UpdateLabel(CountToTenLabel, text);
         }
 
-        public void OnValueChanged(string time)
+        public void OnDisplayTimeUpdated(string time)
         {
             UpdateLabel(DisplayTimeLabel, time);
         }
